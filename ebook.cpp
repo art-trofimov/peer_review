@@ -13,33 +13,13 @@ enum ReqType {
     READ
 };
 
-ReqType GetReqType(string & input) {
+ReqType GetReqType(string& input) {
     using namespace literals;
     ReqType result = ReqType::CHEER;
-    int cut_count = 0;
     if (input.find("CHEER"sv) != string::npos) {
         result = ReqType::CHEER;
-        cut_count = 5;
     } else if (input.find("READ"sv) != string::npos) {
         result = ReqType::READ;
-        cut_count = 4;
-    }
-    input.erase(0, cut_count);
-    return result;
-}
-
-int TakeIntAndErase (string & input) {
-    auto position  = input.find_first_not_of(' ');
-    input.erase(0, position);
-    position = input.find_first_of(' ');
-    int result = 0;
-    if (position == string_view::npos) {
-        result = stoi(input);
-    } else {
-        string s(input);
-        s.resize(position);
-        result = stoi(s);
-        input.erase(0, position);
     }
     return result;
 }
@@ -48,7 +28,7 @@ class BookReaders {
 public:
     BookReaders () { }
     ~BookReaders () { }
-    void Read(int user, int page) {
+    void Read(size_t user, size_t page) {
         if (user_pages_.size() < user) {
             user_pages_.resize(user, 0);
         }
@@ -65,7 +45,7 @@ public:
         people_at_page_[page-1] += 1;
     }
 
-    double Cheer (int user) const {
+    double Cheer (size_t user) const {
         double result = 0.;
         if (usercount_.count(user) == 0) {
             return 0;
@@ -81,6 +61,25 @@ public:
         return result;
     }
 
+    void HandleRequest (istream& is, ostream& os) {
+        string request;
+        is >> request;
+        const auto reqtype = GetReqType(request);
+        size_t user;
+        switch (reqtype) {
+            case (ReqType::CHEER): {
+                is >> user;
+                os << setprecision(6) << Cheer(user) << endl;
+                break;
+            }
+            case (ReqType::READ): {
+                size_t page;
+                is >> user >> page;
+                Read(user, page);
+                break;
+            }
+        }
+    }
 private:
     vector<int> user_pages_;
     vector<int> people_at_page_;
@@ -89,25 +88,12 @@ private:
 
 int main (void) {
     BookReaders br;
-    string request;
-    getline(cin, request);
-    int request_count = stoi(request);
- 
+    int request_count;
+    cin >> request_count;
     for (int i = 0; i != request_count; ++i) {
+        string request;
         getline(cin, request);
-        const auto reqtype = GetReqType(request);
-        switch (reqtype) {
-            case (ReqType::CHEER): {
-                cout << setprecision(6) << br.Cheer(TakeIntAndErase(request)) << endl;
-                break;
-            }
-            case (ReqType::READ): {
-                int user = TakeIntAndErase(request);
-                int page = TakeIntAndErase(request);
-                br.Read(user, page);
-                break;
-            }
-        }
+        br.HandleRequest(cin, cout);
     }
     return 0;
 }
