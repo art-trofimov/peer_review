@@ -13,6 +13,8 @@ enum ReqType {
     READ
 };
 
+// функцияпарсит сходную строку и возвращает тип запроса
+// в виде enum  
 ReqType GetReqType(string& input) {
     using namespace literals;
     ReqType result = ReqType::CHEER;
@@ -28,6 +30,7 @@ class BookReaders {
 public:
     BookReaders () { }
     ~BookReaders () { }
+
     void Read(size_t user, size_t page) {
         if (user_pages_.size() < user) {
             user_pages_.resize(user, 0);
@@ -61,6 +64,7 @@ public:
         return result;
     }
 
+    //обработчик запросов к классу
     void HandleRequest (istream& is, ostream& os) {
         string request;
         is >> request;
@@ -81,9 +85,9 @@ public:
         }
     }
 private:
-    vector<int> user_pages_;
+    vector<int> user_pages_; 
     vector<int> people_at_page_;
-    set<int> usercount_;
+    set<int> usercount_; // количество актуальных пользователей
 };
 
 int main (void) {
