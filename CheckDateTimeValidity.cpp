@@ -30,7 +30,7 @@ struct DateTime
     DateTime &ValidateDay() {
         const bool is_leap_year = (year % 4 == 0) && !(year % 100 == 0 && year % 400 != 0);
         const array month_lengths = {31, 28 + is_leap_year, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
+        *this->ValidateMonth(); //если кто то забыл месяц проверить заблаговременно
         if (day < 1) {
             throw domain_error("day is too small"s);
         }

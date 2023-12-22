@@ -33,6 +33,9 @@ vector<Person> LoadPersons(const DBSettings& db_settings, const QueryOptions& qu
               << "where Age between "s << query.min_age << " and "s << query.max_age << " "s
               << "and Name like '%"s << db.Quote(query.name_filter) << "%'"s;
     DBQuery query(query_str.str());
+    if (query.empty()) {
+        return { };
+    }
 
     vector<Person> persons;
     for (auto [name, age] : db.LoadRows<string, int>(query)) {

@@ -21,13 +21,13 @@ void ParseCitySubjson(vector<City>& cities, const Json& json, const string& coun
     for (const auto& city_json : json.AsList()) {
         const auto& city_obj = city_json.AsObject();
         cities.push_back({
-            .name = city_obj["name"s].AsString(),
-            .iso_code = city_obj["iso_code"s].AsString(),
-            .phone_code = country_phone_code + city_obj["phone_code"s].AsString(),
-            .country_name = country_name,
-            .country_iso_code = country_iso_code,
-            .contry_time_zone = country_time_zone,
-            .languages = languages
+            /*.name =*/             city_obj["name"s].AsString(),
+            /*.iso_code =*/         city_obj["iso_code"s].AsString(),
+            /*.phone_code =*/       country_phone_code + city_obj["phone_code"s].AsString(),
+            /*.country_name =*/     country_name,
+            /*.country_iso_code =*/ country_iso_code,
+            /*.contry_time_zone =*/ country_time_zone,
+            /*.languages =*/        languages
         });
     }
 }
@@ -37,10 +37,10 @@ void ParseCountryJson(vector<Country>& countries, vector<City>& cities, const Js
     for (const auto& country_json : json.AsList()) {
         const auto& country_obj = country_json.AsObject();
         countries.push_back({
-            .name = country_obj["name"s].AsString(),
-            .iso_code = country_obj["iso_code"s].AsString(),
-            .phone_code = country_obj["phone_code"s].AsString(),
-            .time_zone = country_obj["time_zone"s].AsString(),
+            /*.name =*/         country_obj["name"s].AsString(),
+            /*.iso_code =*/     country_obj["iso_code"s].AsString(),
+            /*.phone_code =*/   country_obj["phone_code"s].AsString(),
+            /*.time_zone =*/    country_obj["time_zone"s].AsString(),
         });
         Country& country = countries.back();
         for (const auto& lang_obj : country_obj["languages"s].AsList()) {
